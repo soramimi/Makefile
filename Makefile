@@ -1,7 +1,9 @@
 
 NAME := myapp
+PROJDIR := .
 
 SRCS := main.cpp
+LIBS := 
 
 CC := gcc
 CXX := g++
@@ -23,17 +25,19 @@ $(NAME): $(OBJS)
 	$(LD) $(OBJS) -o $(NAME) $(LIBS)
 
 .c.o:
-	$(CC) $(CFLAGS) -MMD -MP -MF $(<:%.c=%.d) -c $<
-
-.cpp.o:
-	$(CXX) $(CXXFLAGS) -MMD -MP -MF $(<:%.cpp=%.d) -c $<
+	$(CC) $(CFLAGS) -MMD -MP -MF $(<:%.c=%.d) -c $< -o $(<:%.c=%.o)
 
 .cc.o:
-	$(CXX) $(CXXFLAGS) -MMD -MP -MF $(<:%.cc=%.d) -c $<
+	$(CXX) $(CXXFLAGS) -MMD -MP -MF $(<:%.cc=%.d) -c $< -o $(<:%.cc=%.o)
+
+.cpp.o:
+	$(CXX) $(CXXFLAGS) -MMD -MP -MF $(<:%.cpp=%.d) -c $< -o $(<:%.cpp=%.o)
 
 .PHONY: clean
 clean:
-	rm -f $(NAME) *.o *.d
+	-rm $(NAME)
+	find $(PROJDIR) -name "*.o" -exec rm {} \;
+	find $(PROJDIR) -name "*.d" -exec rm {} \;
 
 .PHONY: run
 run:
